@@ -232,7 +232,7 @@ namespace WildcardRoll
                 var processes = Process.GetProcessesByName("Ascension");
                 foreach (var client in processes)
                 {
-                    var handle = client.Handle;
+                    var handle = client.MainWindowHandle;
                     Mem.Open_pHandel(handle);
 
                     var ids = new List<int>();
@@ -273,6 +273,16 @@ namespace WildcardRoll
                 Stop();
                 MessageBox.Show(this, ex.ToString(), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        }
+
+        private void dataGridView1_UserDeletedRow(object sender, DataGridViewRowEventArgs e)
+        {
+            SaveSettings();
+        }
+
+        private void dataGridView1_CellEndEdit(object sender, DataGridViewCellEventArgs e)
+        {
+            SaveSettings();
         }
     }
 }
