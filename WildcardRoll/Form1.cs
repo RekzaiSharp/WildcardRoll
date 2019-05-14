@@ -246,7 +246,7 @@ namespace WildcardRoll
 
                     var spells = from s in Database.Spells select s.Value.ID;
                     var diff = ids.Except(spells);
-                    var diffWithNames = from id in diff select $"{id} (guess: {Program.getSpellName(id)})";
+                    var diffWithNames = from id in diff select $"{id} (guess: {API.GetSpellName(id)})";
                     if (diff.Count() != 0)
                     {
                         Stop();
