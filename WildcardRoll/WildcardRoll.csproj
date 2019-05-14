@@ -8,11 +8,26 @@
     <OutputType>WinExe</OutputType>
     <RootNamespace>WildcardRoll</RootNamespace>
     <AssemblyName>WildcardRoll</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
     <TargetFrameworkProfile />
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -53,9 +68,41 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
+  <PropertyGroup />
+  <PropertyGroup />
+  <PropertyGroup>
+    <StartupObject>WildcardRoll.Program</StartupObject>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+  </PropertyGroup>
   <ItemGroup>
+    <Reference Include="HtmlAgilityPack, Version=1.11.4.0, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a, processorArchitecture=MSIL">
+      <HintPath>..\packages\HtmlAgilityPack.1.11.4\lib\Net45\HtmlAgilityPack.dll</HintPath>
+    </Reference>
+    <Reference Include="ICSharpCode.SharpZipLib, Version=0.84.0.0, Culture=neutral, PublicKeyToken=1b03e6acf1164f73">
+      <HintPath>..\packages\ngit.1.0.0.20110815\lib\net35\ICSharpCode.SharpZipLib.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Posix, Version=2.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
+      <HintPath>..\packages\ngit.1.0.0.20110815\lib\net35\Mono.Posix.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Security, Version=2.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
+      <HintPath>..\packages\ngit.1.0.0.20110815\lib\net35\Mono.Security.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Security.Win32, Version=2.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
+      <HintPath>..\packages\ngit.1.0.0.20110815\lib\net35\Mono.Security.Win32.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.12.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="NGit, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ngit.1.0.0.20110815\lib\net35\NGit.dll</HintPath>
+    </Reference>
+    <Reference Include="NSch, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ngit.1.0.0.20110815\lib\net35\NSch.dll</HintPath>
+    </Reference>
+    <Reference Include="Sharpen, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ngit.1.0.0.20110815\lib\net35\Sharpen.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -80,6 +127,9 @@
     <Compile Include="Memory.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Set.cs" />
+    <Compile Include="Spell.cs" />
+    <Compile Include="Updater.cs" />
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
@@ -93,7 +143,9 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <None Include="app.manifest" />
     <None Include="packages.config" />
+    <None Include="Properties\DataSources\Set.datasource" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -106,6 +158,798 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\inv_misc_questionmark.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\wowspells\53.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\wowspells\71.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\wowspells\72.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\wowspells\75.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\wowspells\78.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\wowspells\99.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\wowspells\100.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\wowspells\116.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\wowspells\133.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\wowspells\139.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\wowspells\168.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\wowspells\172.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\wowspells\324.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\wowspells\331.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\wowspells\348.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\wowspells\355.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\wowspells\403.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\wowspells\465.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\wowspells\467.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\wowspells\498.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\wowspells\586.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\wowspells\587.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\wowspells\635.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\wowspells\686.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\wowspells\687.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\wowspells\688.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\wowspells\697.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\wowspells\702.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\wowspells\772.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\wowspells\774.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\wowspells\779.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\wowspells\853.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\wowspells\921.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\wowspells\980.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\wowspells\1120.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\wowspells\1126.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\wowspells\1130.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\wowspells\1454.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\wowspells\1459.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\wowspells\1494.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\wowspells\1495.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\wowspells\1515.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\wowspells\1715.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\wowspells\1752.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\wowspells\1776.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\wowspells\1784.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\wowspells\1978.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\wowspells\2098.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\wowspells\2136.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\wowspells\2457.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\wowspells\2484.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\wowspells\2565.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\wowspells\2649.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\wowspells\2687.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\wowspells\2973.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\wowspells\2983.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\wowspells\3044.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\wowspells\3599.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\wowspells\5116.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\wowspells\5143.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\wowspells\5171.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\wowspells\5176.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\wowspells\5185.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\wowspells\5277.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\wowspells\5487.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\wowspells\5504.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\wowspells\5782.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\wowspells\6343.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\wowspells\6673.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\wowspells\6807.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\wowspells\7384.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\wowspells\8042.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\wowspells\8050.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\wowspells\8071.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\wowspells\8921.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\wowspells\13163.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\wowspells\13165.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\wowspells\19740.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\wowspells\19742.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\wowspells\20271.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\wowspells\21084.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\wowspells\25780.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\wowspells\34428.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\wowspells\53408.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.6.1">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4.6.1 %28x86 und x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\53.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\71.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\72.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\75.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\78.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\99.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\100.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\116.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\133.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\139.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\168.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\172.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\324.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\331.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\348.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\355.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\403.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\465.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\467.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\498.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\586.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\587.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\635.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\686.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\687.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\688.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\697.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\702.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\772.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\774.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\779.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\853.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\921.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\980.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\1120.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\1126.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\1130.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\1454.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\1459.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\1494.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\1495.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\1515.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\1715.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\1752.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\1776.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\1784.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\1978.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\2098.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\2136.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\2457.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\2484.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\2565.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\2649.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\2687.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\2973.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\2983.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\3044.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\3599.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\5116.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\5143.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\5171.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\5176.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\5185.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\5277.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\5487.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\5504.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\5782.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\6343.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\6673.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\6807.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\7384.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\8042.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\8050.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\8071.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\8921.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\13163.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\13165.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\19740.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\19742.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\20271.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\21084.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\25780.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\34428.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\53408.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\589.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\_17.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\_53.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\_71.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\_72.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\_75.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\_78.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\_99.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\_100.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\_116.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\_133.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\_139.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\_168.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\_172.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\_324.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\_331.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\_348.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\_355.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\_403.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\_465.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\_467.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\_498.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\_585.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\_586.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\_587.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\_589.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\_635.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\_686.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\_687.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\_688.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\_697.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\_702.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\_772.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\_774.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\_779.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\_853.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\_921.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\_980.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\_1120.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\_1126.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\_1130.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\_1243.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\_1454.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\_1459.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\_1494.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\_1495.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\_1515.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\_1715.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\_1752.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\_1776.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\_1784.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\_1978.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\_2050.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\_2098.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\_2136.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\_2457.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\_2484.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\_2565.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\_2649.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\_2687.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\_2973.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\_2983.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\_3044.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\_3599.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\_5116.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\_5143.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\_5171.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\_5176.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\_5185.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\_5277.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\_5487.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\_5504.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\_5730.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\_5782.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\_6343.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\_6673.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\_6807.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\_7384.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\_8042.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\_8050.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\_8071.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\_8921.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\_13163.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\_13165.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\_19740.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\_19742.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\_20271.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\_21084.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\_25780.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\_34428.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\_53408.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -1,12 +1,12 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Threading;
+using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
-using Newtonsoft.Json;
-
 
 namespace WildcardRoll
 {
@@ -15,13 +15,9 @@ namespace WildcardRoll
         [DllImport("user32.dll", SetLastError = true)]
         static extern bool PostMessage(IntPtr hWnd, uint Msg, int wParam, int lParam);
 
-        [DllImport("kernel32.dll", SetLastError = true)]
-        public static extern bool ReadProcessMemory(IntPtr hProcess, IntPtr lpBaseAddress, [Out] byte[] lpBuffer, int dwSize, out IntPtr lpNumberOfBytesRead);
+        [DllImport("user32.dll", CharSet = CharSet.Auto)]
+        public static extern IntPtr SendMessage(IntPtr hWnd, int Msg, int wParam, IntPtr lParam);
 
-        private Process Client;
-        private IntPtr Handle;
-        private int rollCount = 1;
-        private int keyPress;
         private string savePath = Directory.GetCurrentDirectory() + "/";
 
         const int WM_KEYDOWN = 0x100;
@@ -30,154 +26,245 @@ namespace WildcardRoll
         const int WM_SYSKEYDOWN = 0x104;
         const int WM_SYSKEYUP = 0x105;
 
-        //Spellbook Begin: 0x00BE6D88 - 0x4
+        Memory Mem = new Memory();
+        List<Set> Sets = new List<Set>();
+        PictureBox[] pbs;
+        ToolTip[] tts;
+        Set selectedSet;
 
-        public Database Data = new Database();
-        public Memory Mem = new Memory();
-        public Stopwatch watch;
+        static string settings_file = "settings.json";
 
         public Form1()
         {
             InitializeComponent();
         }
 
+        void LoadSettings()
+        {
+            if (File.Exists(settings_file))
+                Sets = JsonConvert.DeserializeObject<List<Set>>(File.ReadAllText(settings_file));
+        }
+
+        void SaveSettings()
+        {
+            File.WriteAllText(settings_file, JsonConvert.SerializeObject(Sets));
+        }
+
+        void Render(string search = null)
+        {
+            panel1.Controls.Clear();
+            panel1.SuspendLayout();
+
+            if (search != null)
+                search = search.ToLower();
+
+            int i = 0;
+            foreach (var item in Database.Spells)
+            {
+                var id = item.Key;
+                var spell = item.Value;
+
+                if (search != null && !spell.Name.ToLower().Contains(search))
+                    continue;
+
+                var row = 7;
+
+                var pb = new PictureBox();
+                pb.Image = spell.Icon;
+                pb.Width = 50;
+                pb.Height = 50;
+                pb.Location = new Point(pb.Width * (i % row), pb.Height * (int)Math.Floor(0.0 + i / row));
+                pb.SizeMode = PictureBoxSizeMode.StretchImage;
+                pb.Click += (sender, e) =>
+                {
+                    selectedSet.AddSpell(spell);
+                    UpdateSet();
+                };
+                new ToolTip().SetToolTip(pb, spell.Name);
+                panel1.Controls.Add(pb);
+
+                ++i;
+            }
+
+            panel1.ResumeLayout();
+        }
+
+        void UpdateSet()
+        {
+            for (int i = 0; i < 5; i++)
+            {
+                var spell = i < selectedSet.Spells.Count ? selectedSet.Spells[i] : null;
+                pbs[i].Image = spell != null ? spell.Icon : Properties.Resources.inv_misc_questionmark;
+                tts[i].SetToolTip(pbs[i], spell != null ? spell.Name : "Anything");
+            }
+        }
+
         private void Form1_Load(object sender, EventArgs e)
         {
-           Data.Initialize();
+            LoadSettings();
+            setBindingSource.DataSource = Sets;
 
-           if(!File.Exists(savePath + "sets.json"))
-               File.Create(savePath + "sets.json").Close();
-           else
-           {
-               var text = File.ReadAllText(savePath + "sets.json");
-               if (text.Length > 1)
-               {
+            pbs = new PictureBox[] { pictureBox1, pictureBox2, pictureBox3, pictureBox4, pictureBox5 };
+            tts = new ToolTip[] { new ToolTip(), new ToolTip(), new ToolTip(), new ToolTip(), new ToolTip() };
 
-                   var _Set = JsonConvert.DeserializeObject<Set>(text);
-                   checkedListBox1.Items.Add(_Set.Category);
-                }
-           }
-
-           try
-           {
-               Process[] processes = Process.GetProcessesByName("Ascension");
-               Client = processes[0];
-               Handle = Client.MainWindowHandle;
-               listBox1.Items.Add("Found Ascension Client: " + Client.Id + " - " + "0x" + Handle);
-               Mem.Open_pHandel("Ascension");
-               watch = Stopwatch.StartNew();
-               timer2.Enabled = true;
-               timer2.Start();
-
-               lblName.Text = Mem.ReadString(0x00C79D18, 24);
-               lblRace.Text = Mem.ReadString(0x00DCE9F2, 24);
-           }
-           catch (Exception exception)
-           {
-               Console.WriteLine(exception);
-               throw;
-           }
-        }
-
-        private void Timer1_Tick(object sender, EventArgs e)
-        {
-            
-            try
+            int i = 0;
+            foreach (var pb in pbs)
             {
-                PostMessage(Handle, WM_KEYDOWN, keyPress, 0);
-                Thread.Sleep(10);
-                PostMessage(Handle, WM_KEYUP, keyPress, 0);
-                listBox1.Items.Add("Roll Count: " + rollCount + ", Time: " + DateTime.Now.ToString().Split(' ')[1]);
-                rollCount += 1;
-                listBox1.SelectedIndex = listBox1.Items.Count - 1;
-                listBox1.SelectedIndex = -1;
-                Thread.Sleep(300);
-                CheckSpells();
+                int index = i;
+                pb.Click += (a, b) =>
+                {
+                    selectedSet.RemoveSpellIndex(index);
+                    UpdateSet();
+                };
+                i++;
             }
-            catch (Exception exception)
-            {
-                Console.WriteLine("Could not reroll: " + exception);
-                throw;
-            }
-            
+
+            Render();
         }
 
-        private void CheckSpells()
+        private void dataGridView1_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
-            listBox3.Items.Clear();
-            for (var i = 0; i <= 100; ++i)
-            {
-                var spellID = Mem.ReadInt(0x00BE6D88 + (i * 0x4));
-                if (Data.SpellList.ContainsKey(spellID))
-                    listBox3.Items.Add(Data.SpellList[spellID].ToString());
-            }
+            if (e.RowIndex == dataGridView1.Rows.Count - 1)
+                return;
+
+            textBox1.Text = "";
+            selectedSet = (Set)dataGridView1.Rows[e.RowIndex].DataBoundItem;
+            UpdateSet();
+            tabControl1.SelectedIndex = 1;
+            textBox1.Select();
         }
 
-        private void Button2_Click(object sender, EventArgs e)
+        private void btnBack_Click(object sender, EventArgs e)
         {
-            timer1.Interval = Convert.ToInt32(textBox2.Text);
-            timer1.Enabled = true;
-            timer1.Start();
+            selectedSet = null;
+            tabControl1.SelectedIndex = 0;
+            SaveSettings();
         }
 
-        private void Button1_Click(object sender, EventArgs e)
+        private void btnRoll_Click(object sender, EventArgs e)
         {
-            button1.Text = "Press Key";
+            if (timer1.Enabled)
+                Stop();
+            else
+                Run();
         }
 
-        private void Button1_KeyDown(object sender, KeyEventArgs e)
-        {
-            textBox1.Text = e.KeyCode.ToString();
-            keyPress = (int)e.KeyCode;
-            button1.Text = "Select Key";
-        }
-
-        private void TextBox2_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar) &&
-                (e.KeyChar != '.'))
-            {
-                e.Handled = true;
-            }
-        }
-
-        private void Button3_Click(object sender, EventArgs e)
+        void Stop()
         {
             timer1.Stop();
-            timer1.Enabled = false;
+            btnRoll.Text = "Run";
         }
 
-        private void Button6_Click(object sender, EventArgs e)
+        void Run()
         {
-            checkedListBox1.Items.Add(textBox3.Text);
+            timer1.Start();
+            btnRoll.Text = "Stop";
         }
 
-        private void AddSet()
+        private void dataGridView1_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
-            foreach (var item in checkedListBox1.Items)
+            if (e.ColumnIndex > 0)
             {
-                Set s = new Set();
-                s.Category = textBox3.Text;
+                var elem = dataGridView1[e.ColumnIndex, e.RowIndex];
+                var set = (Set)dataGridView1.Rows[e.RowIndex].DataBoundItem;
+                if (set == null)
+                {
+                    e.Value = Properties.Resources.inv_misc_questionmark;
+                    elem.ToolTipText = "Anything";
+                    return;
+                }
 
-                string json = JsonConvert.SerializeObject(s);
-                System.IO.File.WriteAllText(savePath + "sets.json", json);
+                var spell = e.ColumnIndex <= set.Spells.Count ? set.Spells[e.ColumnIndex - 1] : null;
+                if (spell == null)
+                {
+                    e.Value = Properties.Resources.inv_misc_questionmark;
+                    elem.ToolTipText = "Anything";
+                    return;
+                }
+
+                e.Value = spell.Icon;
+                dataGridView1[e.ColumnIndex, e.RowIndex].ToolTipText = spell.Name;
+            }
+
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+            Render(textBox1.Text);
+        }
+
+        bool CheckForSetHit(List<int> ids, out Set result)
+        {
+            foreach (var set in Sets)
+            {
+                if (!set.Enabled || set.Spells.Count == 0)
+                    continue;
+
+                var search = (from s in set.Spells select s.ID).ToArray();
+                var inter = search.Intersect(ids);
+                if (inter.Count() == search.Count())
+                {
+                    result = set;
+                    return true;
+                }
+            }
+
+            result = null;
+            return false;
+        }
+
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            try
+            {
+                var processes = Process.GetProcessesByName("Ascension");
+                var client = processes[0];
+                var handle = client.MainWindowHandle;
+
+                Mem.Open_pHandel("Ascension");
+
+                var ids = new List<int>();
+                for (var i = 0; i <= 100; ++i)
+                {
+                    var id = Mem.ReadInt(0x00BE6D88 + (i * 0x4));
+                    if (id != 0 && id <= 200000)
+                        ids.Add(id);
+                }
+
+                ids = ids.Except(Database.Ignore).ToList();
+
+                var spells = from s in Database.Spells select s.Value.ID;
+                var diff = ids.Except(spells);
+                var diffWithNames = from id in diff select $"{id} (guess: {Program.getSpellName(id)})";
+                if (diff.Count() != 0)
+                {
+                    Stop();
+                    MessageBox.Show("Unknwon Spell ID(s): " + string.Join(", ", diffWithNames) + "\n\nPlease contact a developer with this message.");
+                    BringToFront();
+                    return;
+                }
+
+                if (CheckForSetHit(ids, out Set result))
+                {
+                    Stop();
+                    MessageBox.Show("HIT");
+                    BringToFront();
+                    return;
+                }
+
+                SendMessage(handle, WM_KEYDOWN, (int)Keys.D0, IntPtr.Zero);
+                SendMessage(handle, WM_KEYUP, (int)Keys.D0, IntPtr.Zero);
+            }
+            catch (Exception ex)
+            {
+                Stop();
+                MessageBox.Show(this, ex.ToString(), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
-        private void CheckedListBox1_SelectedIndexChanged(object sender, EventArgs e)
+        private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            listBox2.Enabled = true;
-        }
 
-        private void Button7_Click(object sender, EventArgs e)
-        {
-            if (comboBox1.Text.Length > 1)
-                listBox2.Items.Add(comboBox1.Text);
-        }
-
-        private void Timer2_Tick(object sender, EventArgs e)
-        {
-            lblRuntime.Text = watch.Elapsed.Seconds.ToString() + " seconds";
         }
     }
 }
