@@ -232,8 +232,7 @@ namespace WildcardRoll
                 var processes = Process.GetProcessesByName("Ascension");
                 foreach (var client in processes)
                 {
-                    var handle = client.MainWindowHandle;
-                    Mem.Open_pHandel(handle);
+                    Mem.Open_pHandel(client.Handle);
 
                     var ids = new List<int>();
                     for (var i = 0; i <= 100; ++i)
@@ -264,8 +263,8 @@ namespace WildcardRoll
                         return;
                     }
 
-                    SendMessage(handle, WM_KEYDOWN, (int)Keys.D0, IntPtr.Zero);
-                    SendMessage(handle, WM_KEYUP, (int)Keys.D0, IntPtr.Zero);
+                    SendMessage(client.MainWindowHandle, WM_KEYDOWN, (int)Keys.D0, IntPtr.Zero);
+                    SendMessage(client.MainWindowHandle, WM_KEYUP, (int)Keys.D0, IntPtr.Zero);
                 }
             }
             catch (Exception ex)
