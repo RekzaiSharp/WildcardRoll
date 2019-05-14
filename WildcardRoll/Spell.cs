@@ -1,16 +1,7 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using HtmlAgilityPack;
-using System.IO;
-using System.Drawing.Drawing2D;
-using System.Drawing.Imaging;
-using Newtonsoft.Json;
-using System.Text.RegularExpressions;
-using System.Net;
 
 namespace WildcardRoll
 {

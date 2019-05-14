@@ -1,9 +1,5 @@
 ﻿using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace WildcardRoll
 {
@@ -32,12 +28,7 @@ namespace WildcardRoll
                 Spells.Add(spell);
         }
 
-        public void RemoveSpell(Spell spell)
-        {
-            Spells.Remove(spell);
-        }
-
-        public void RemoveSpellIndex(int i)
+        public void RemoveSpellByIndex(int i)
         {
             if (i < Spells.Count)
                 Spells.RemoveAt(i);

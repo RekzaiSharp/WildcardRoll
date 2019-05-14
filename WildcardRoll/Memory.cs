@@ -9,20 +9,9 @@ public class Memory
     private Process attachedProcess = null;
     private byte[] buffer;
 
-    public bool Open_pHandel(string processName)
+    public void Open_pHandel(IntPtr handle)
     {
-        Process[] proc = Process.GetProcessesByName(processName);
-
-        if (proc.Length == 0)
-            return false;
-        else if (proc.Length > 1)
-            throw new Exception("More then one process found.");
-        else
-        {
-            attachedProcess = proc[0];
-            pHandel = proc[0].Handle;
-            return true;
-        }
+        pHandel = handle;
     }
 
     #region x86

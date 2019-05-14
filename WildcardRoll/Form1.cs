@@ -31,6 +31,7 @@ namespace WildcardRoll
         PictureBox[] pbs;
         ToolTip[] tts;
         Set selectedSet;
+        List<ToolTip> renderTTs = new List<ToolTip>();
 
         static string settings_file = "settings.json";
 
@@ -52,8 +53,15 @@ namespace WildcardRoll
 
         void Render(string search = null)
         {
-            panel1.Controls.Clear();
             panel1.SuspendLayout();
+
+            foreach (var tt in renderTTs)
+                tt.Dispose();
+            renderTTs.Clear();
+
+            foreach (var ctrl in panel1.Controls)
+                ((PictureBox)ctrl).Dispose();
+            panel1.Controls.Clear();
 
             if (search != null)
                 search = search.ToLower();
@@ -80,7 +88,11 @@ namespace WildcardRoll
                     selectedSet.AddSpell(spell);
                     UpdateSet();
                 };
-                new ToolTip().SetToolTip(pb, spell.Name);
+
+                var toolTip = new ToolTip();
+                toolTip.SetToolTip(pb, spell.Name);
+                renderTTs.Add(toolTip);
+
                 panel1.Controls.Add(pb);
 
                 ++i;
@@ -113,7 +125,7 @@ namespace WildcardRoll
                 int index = i;
                 pb.Click += (a, b) =>
                 {
-                    selectedSet.RemoveSpellIndex(index);
+                    selectedSet.RemoveSpellByIndex(index);
                     UpdateSet();
                 };
                 i++;
@@ -218,53 +230,49 @@ namespace WildcardRoll
             try
             {
                 var processes = Process.GetProcessesByName("Ascension");
-                var client = processes[0];
-                var handle = client.MainWindowHandle;
-
-                Mem.Open_pHandel("Ascension");
-
-                var ids = new List<int>();
-                for (var i = 0; i <= 100; ++i)
+                foreach (var client in processes)
                 {
-                    var id = Mem.ReadInt(0x00BE6D88 + (i * 0x4));
-                    if (id != 0 && id <= 200000)
-                        ids.Add(id);
+                    var handle = client.Handle;
+                    Mem.Open_pHandel(handle);
+
+                    var ids = new List<int>();
+                    for (var i = 0; i <= 100; ++i)
+                    {
+                        var id = Mem.ReadInt(0x00BE6D88 + (i * 0x4));
+                        if (id != 0 && id <= 200000)
+                            ids.Add(id);
+                    }
+
+                    ids = ids.Except(Database.Ignore).ToList();
+
+                    var spells = from s in Database.Spells select s.Value.ID;
+                    var diff = ids.Except(spells);
+                    var diffWithNames = from id in diff select $"{id} (guess: {Program.getSpellName(id)})";
+                    if (diff.Count() != 0)
+                    {
+                        Stop();
+                        MessageBox.Show("Unknwon Spell ID(s): " + string.Join(", ", diffWithNames) + "\n\nPlease contact a developer with this message.");
+                        BringToFront();
+                        return;
+                    }
+
+                    if (CheckForSetHit(ids, out Set result))
+                    {
+                        Stop();
+                        MessageBox.Show("HIT");
+                        BringToFront();
+                        return;
+                    }
+
+                    SendMessage(handle, WM_KEYDOWN, (int)Keys.D0, IntPtr.Zero);
+                    SendMessage(handle, WM_KEYUP, (int)Keys.D0, IntPtr.Zero);
                 }
-
-                ids = ids.Except(Database.Ignore).ToList();
-
-                var spells = from s in Database.Spells select s.Value.ID;
-                var diff = ids.Except(spells);
-                var diffWithNames = from id in diff select $"{id} (guess: {Program.getSpellName(id)})";
-                if (diff.Count() != 0)
-                {
-                    Stop();
-                    MessageBox.Show("Unknwon Spell ID(s): " + string.Join(", ", diffWithNames) + "\n\nPlease contact a developer with this message.");
-                    BringToFront();
-                    return;
-                }
-
-                if (CheckForSetHit(ids, out Set result))
-                {
-                    Stop();
-                    MessageBox.Show("HIT");
-                    BringToFront();
-                    return;
-                }
-
-                SendMessage(handle, WM_KEYDOWN, (int)Keys.D0, IntPtr.Zero);
-                SendMessage(handle, WM_KEYUP, (int)Keys.D0, IntPtr.Zero);
             }
             catch (Exception ex)
             {
                 Stop();
                 MessageBox.Show(this, ex.ToString(), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-        }
-
-        private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
         }
     }
 }
