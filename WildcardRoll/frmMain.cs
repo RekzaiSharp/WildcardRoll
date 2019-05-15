@@ -253,17 +253,17 @@ namespace WildcardRoll
                     if (diff.Count() != 0)
                     {
                         Stop();
-                        MessageBox.Show("Unknwon Spell ID(s): " + string.Join(", ", diffWithNames) + "\n\nPlease contact a developer with this message.");
                         BringToFront();
+                        MessageBox.Show("Unknwon Spell ID(s): " + string.Join(", ", diffWithNames) + "\n\nPlease contact a developer with this message.");
                         return;
                     }
 
                     if (CheckForSetHit(ids, out Set result))
                     {
                         Stop();
-                        MessageBox.Show("HIT " + string.Join(", ", from s in result.Spells select s.Name));
                         BringToFront();
                         FlashWindow(Handle, true);
+                        MessageBox.Show("HIT " + string.Join(", ", from s in result.Spells select s.Name));
                         return;
                     }
 
