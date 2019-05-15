@@ -1,11 +1,4 @@
-﻿using HtmlAgilityPack;
-using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Net;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
+﻿using System;
 using System.Windows.Forms;
 
 namespace WildcardRoll
@@ -23,7 +16,7 @@ namespace WildcardRoll
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form1());
+            Application.Run(new frmMain());
         }
     }
 }

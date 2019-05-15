@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace WildcardRoll
 {
-    class Set
+    public class Set
     {
         public bool Enabled { get; set; }
 

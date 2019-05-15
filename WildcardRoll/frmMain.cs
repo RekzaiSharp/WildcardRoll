@@ -10,13 +10,16 @@ using System.Windows.Forms;
 
 namespace WildcardRoll
 {
-    public partial class Form1 : Form
+    public partial class frmMain : Form
     {
         [DllImport("user32.dll", SetLastError = true)]
         static extern bool PostMessage(IntPtr hWnd, uint Msg, int wParam, int lParam);
 
         [DllImport("user32.dll", CharSet = CharSet.Auto)]
         public static extern IntPtr SendMessage(IntPtr hWnd, int Msg, int wParam, IntPtr lParam);
+
+        [DllImport("user32.dll")]
+        static extern bool FlashWindow(IntPtr hwnd, bool bInvert);
 
         private string savePath = Directory.GetCurrentDirectory() + "/";
 
@@ -35,7 +38,7 @@ namespace WildcardRoll
 
         static string settings_file = "settings.json";
 
-        public Form1()
+        public frmMain()
         {
             InitializeComponent();
         }
@@ -258,8 +261,9 @@ namespace WildcardRoll
                     if (CheckForSetHit(ids, out Set result))
                     {
                         Stop();
-                        MessageBox.Show("HIT");
+                        MessageBox.Show("HIT " + string.Join(", ", from s in result.Spells select s.Name));
                         BringToFront();
+                        FlashWindow(Handle, true);
                         return;
                     }
 

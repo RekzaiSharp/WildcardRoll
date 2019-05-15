@@ -9,18 +9,72 @@ namespace WildcardRoll
         {
             { 5019, "Shoot" },
             { 6603, "Auto Attack" },
-            { 20598, "The Human Spirit" },
             { 107, "Block" },
-            { 20599, "Diplomacy" },
             { 81, "Dodge" },
             { 674, "Dual Wield" },
-            { 59752, "Every Man for Himself" },
-            { 668, "Language Common" },
-            { 20864, "Mace Specialization" },
             { 3127, "Parry" },
-            { 58985, "Perception" },
             { 3018, "Shoot" },
+
+            // Alliance
+            { 668, "Language Common" }, // Human
+
+            // Horde
+            { 669, "Language Orcish" }, // Orc
+            { 17737, "Language Gutterspeak" }, // Undead
+
+            // Human
+            { 58985, "Perception" },
+            { 20599, "Diplomacy" },
+            { 20598, "The Human Spirit" },
+            { 59752, "Every Man for Himself" },
+            { 20864, "Mace Specialization" },
             { 20597, "Sword Specialization" },
+
+            // Dwarf
+            { 2481, "Find Treasure" },
+            { 20596, "Frost Resistance" },
+            { 20595, "Gun Specialization" },
+            { 59224, "Mace Specialization" },
+            { 20594, "Stoneform" },
+
+            // Night elf
+            { 21009, "Elusiveness" },
+            { 20583, "Nature Resistance" },
+            { 20582, "Quickness" },
+            { 58984, "Shadowmeld" },
+            { 20585, "Wisp Spirit" },
+
+            // Gnom
+            { 20592, "Arcane Resistance" },
+            { 20593, "Engineering Specialization" },
+            { 20589, "Escape Artist" },
+            { 20591, "Expansive Mind" },
+
+            // Orc
+            { 20574, "Axe Specialization" },
+            { 33697, "Blood Fury" },
+            { 20575, "Command" },
+            { 20573, "Hardiness" },
+
+            // Undead
+            { 20577, "Cannibalize" },
+            { 20579, "Shadow Resistance" },
+            { 5227, "Underwater Breathing" },
+            { 7744, "Will of the Forsaken" },
+
+            // Taure
+            { 20552, "Cultivation" },
+            { 20550, "Endurance" },
+            { 20551, "Nature Resistance" },
+            { 20549, "War Stomp" },
+
+            // Troll
+            { 20557, "Beast Slaying" },
+            { 26297, "Berserking" },
+            { 26290, "Bow Specialization" },
+            { 58943, "Da Voodoo Shuffle" },
+            { 20555, "Regeneration" },
+            { 20558, "Throwing Specialization" },
 
             // Hunter
             { 883, "Call Pet" },
@@ -31,7 +85,7 @@ namespace WildcardRoll
 
         } select e.Key).ToList();
 
-        static Dictionary<int, string> spellist = new Dictionary<int, string>() {
+        public static Dictionary<int, Spell> Spells = (from spell in new Dictionary<int, string>() {
             // Balance
             { 5176, "Wrath" },
             { 8921, "Moonfire" },
@@ -156,8 +210,6 @@ namespace WildcardRoll
             { 71, "Defensive Stance" },
             { 355, "Taunt" },
             { 2565, "Shield Block" },
-        };
-
-        internal static Dictionary<int, Spell> Spells = (from spell in spellist select new Spell(spell.Key, spell.Value)).ToDictionary(x => x.ID, x => x);
+        } select new Spell(spell.Key, spell.Value)).ToDictionary(x => x.ID, x => x);
     }
 }

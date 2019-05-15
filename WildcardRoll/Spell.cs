@@ -5,7 +5,7 @@ using System.Drawing;
 
 namespace WildcardRoll
 {
-    class Spell : IComparable<Spell>
+    public class Spell : IComparable<Spell>
     {
         public int ID { get; private set; }
         public string Name { get; set; }
