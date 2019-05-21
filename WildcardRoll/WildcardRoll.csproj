@@ -956,6 +956,7 @@
     <None Include="Resources\_53408.jpg" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\_6795.jpg" />
     <Content Include="wolf.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

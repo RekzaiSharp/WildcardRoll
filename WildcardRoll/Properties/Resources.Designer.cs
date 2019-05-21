@@ -743,6 +743,16 @@ namespace WildcardRoll.Properties {
         /// <summary>
         ///   Sucht eine lokalisierte Ressource vom Typ System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap _6795 {
+            get {
+                object obj = ResourceManager.GetObject("_6795", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Ressource vom Typ System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap _6807 {
             get {
                 object obj = ResourceManager.GetObject("_6807", resourceCulture);
