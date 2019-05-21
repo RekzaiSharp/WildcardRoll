@@ -51,7 +51,7 @@ namespace WildcardRoll
 
         void SaveSettings()
         {
-            File.WriteAllText(settings_file, JsonConvert.SerializeObject(Sets));
+            File.WriteAllText(settings_file, JsonConvert.SerializeObject(Sets, Formatting.Indented));
         }
 
         void Render(string search = null)
