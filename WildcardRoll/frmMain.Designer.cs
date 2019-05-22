@@ -72,7 +72,7 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(11, 788);
+            this.label7.Location = new System.Drawing.Point(9, 12);
             this.label7.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(151, 17);
@@ -81,7 +81,7 @@
             // 
             // btnRoll
             // 
-            this.btnRoll.Location = new System.Drawing.Point(369, 782);
+            this.btnRoll.Location = new System.Drawing.Point(369, 6);
             this.btnRoll.Name = "btnRoll";
             this.btnRoll.Size = new System.Drawing.Size(149, 29);
             this.btnRoll.TabIndex = 15;
@@ -135,8 +135,8 @@
             // 
             this.tabPage1.Controls.Add(this.linkLabel1);
             this.tabPage1.Controls.Add(this.groupBox2);
-            this.tabPage1.Controls.Add(this.label7);
             this.tabPage1.Controls.Add(this.btnRoll);
+            this.tabPage1.Controls.Add(this.label7);
             this.tabPage1.Location = new System.Drawing.Point(4, 5);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
@@ -148,7 +148,7 @@
             // linkLabel1
             // 
             this.linkLabel1.AutoSize = true;
-            this.linkLabel1.Location = new System.Drawing.Point(165, 788);
+            this.linkLabel1.Location = new System.Drawing.Point(165, 12);
             this.linkLabel1.Name = "linkLabel1";
             this.linkLabel1.Size = new System.Drawing.Size(200, 17);
             this.linkLabel1.TabIndex = 18;
@@ -159,9 +159,9 @@
             // groupBox2
             // 
             this.groupBox2.Controls.Add(this.dataGridView1);
-            this.groupBox2.Location = new System.Drawing.Point(9, 6);
+            this.groupBox2.Location = new System.Drawing.Point(9, 34);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(509, 770);
+            this.groupBox2.Size = new System.Drawing.Size(509, 776);
             this.groupBox2.TabIndex = 17;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Sets";
@@ -182,12 +182,12 @@
             this.dataGridViewTextBoxColumn10});
             this.dataGridView1.Cursor = System.Windows.Forms.Cursors.Default;
             this.dataGridView1.DataSource = this.setBindingSource;
-            this.dataGridView1.Location = new System.Drawing.Point(5, 22);
+            this.dataGridView1.Location = new System.Drawing.Point(5, 19);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.RowHeadersVisible = false;
             this.dataGridView1.RowTemplate.Height = 64;
             this.dataGridView1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridView1.Size = new System.Drawing.Size(498, 742);
+            this.dataGridView1.Size = new System.Drawing.Size(498, 749);
             this.dataGridView1.TabIndex = 1;
             this.dataGridView1.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellDoubleClick);
             this.dataGridView1.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellEndEdit);
