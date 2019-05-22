@@ -27,7 +27,7 @@ namespace WildcardRoll
         const int WM_SYSKEYDOWN = 0x104;
         const int WM_SYSKEYUP = 0x105;
 
-        static string VERSION = "v1.0.1";
+        static string VERSION = "v1.0.2";
 
         Memory Mem = new Memory();
         List<Set> Sets = new List<Set>();
