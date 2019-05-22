@@ -21,8 +21,6 @@ namespace WildcardRoll
         [DllImport("user32.dll")]
         static extern bool FlashWindow(IntPtr hwnd, bool bInvert);
 
-        private string savePath = Directory.GetCurrentDirectory() + "/";
-
         const int WM_KEYDOWN = 0x100;
         const int WM_KEYUP = 0x101;
         const int WM_CHAR = 0x105;
@@ -171,7 +169,7 @@ namespace WildcardRoll
         void Stop()
         {
             timer1.Stop();
-            btnRoll.Text = "Run";
+            btnRoll.Text = "Roll!";
         }
 
         void Run()

@@ -7,6 +7,7 @@ namespace WildcardRoll
     {
         public static List<int> Ignore = (from e in new Dictionary<int, string>()
         {
+            // General
             { 5019, "Shoot" },
             { 6603, "Auto Attack" },
             { 107, "Block" },
@@ -82,7 +83,6 @@ namespace WildcardRoll
             { 6991, "Feed Pet" },
             { 982, "Revive Pet" },
             { 1515, "Tame Beast" },
-
         } select e.Key).ToList();
 
         public static Dictionary<int, Spell> Spells = (from spell in new Dictionary<int, string>() {
