@@ -240,8 +240,10 @@ namespace WildcardRoll
                     var ids = new List<int>();
                     for (var i = 0; i <= 100; ++i)
                     {
-                        var id = Mem.ReadInt(0x00BE6D88 + (i * 0x4));
-                        if (id != 0 && id <= 200000)
+                        var address = 0x00BE6D88 + (i * 0x4);
+                        var id = Mem.ReadUShort(address);
+                        var flag = Mem.ReadUShort(address + 0x2);
+                        if (id != 0 && flag == 0)
                             ids.Add(id);
                     }
 
@@ -249,7 +251,7 @@ namespace WildcardRoll
 
                     var spells = from s in Database.Spells select s.Value.ID;
                     var diff = ids.Except(spells);
-                    var diffWithNames = from id in diff select id + " (guess: " + API.GetSpellName(id) + ")";
+                    var diffWithNames = from id in diff select $"{id} (guess: {API.GetSpellName(id)})";
                     if (diff.Count() != 0)
                     {
                         Stop();
@@ -263,7 +265,7 @@ namespace WildcardRoll
                         Stop();
                         BringToFront();
                         FlashWindow(Handle, true);
-                        MessageBox.Show("HIT " + string.Join(", ", from s in result.Spells select s.Name + " [" + s.ID + "]"));
+                        MessageBox.Show("HIT " + string.Join(", ", from s in result.Spells select $"{s.Name} [{s.ID}]"));
                         return;
                     }
 
@@ -286,6 +288,11 @@ namespace WildcardRoll
         private void dataGridView1_CellEndEdit(object sender, DataGridViewCellEventArgs e)
         {
             SaveSettings();
+        }
+
+        private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            Process.Start("https://github.com/RekzaiSharp/WildcardRoll");
         }
     }
 }

@@ -74,6 +74,11 @@ public class Memory
         return BitConverter.ToInt32(ReadBytes(address, 4), 0);
     }
 
+    public int ReadUShort(int address)
+    {
+        return BitConverter.ToUInt16(ReadBytes(address, 2), 0);
+    }
+
     public byte ReadByte(int address)
     {
         return ReadBytes(address, 1)[0];
