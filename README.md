@@ -7,13 +7,14 @@ Releases of the software can be found on the [release section](https://github.co
 
 ### How to use?
 
-Just start the app, select the abilities you want to roll for and put the following macro on key 0 (zero):
+Just extract and start the app (doesn't have to be in the addon folder of wow), select the abilities you want to roll for and put the following macro on key 0 (zero):
 ```
 /use Dice of Destiny
 /use Hearthstone
 /stopcasting
 /click StaticPopup1Button1
 ```
+Now press the "Roll!" button and you are good to go.
 
 ### Screenshot
 
