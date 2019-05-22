@@ -29,7 +29,7 @@ namespace WildcardRoll
         const int WM_SYSKEYDOWN = 0x104;
         const int WM_SYSKEYUP = 0x105;
 
-        static string VERSION = "v0.1.0";
+        static string VERSION = "v1.0.0";
 
         Memory Mem = new Memory();
         List<Set> Sets = new List<Set>();
@@ -143,7 +143,7 @@ namespace WildcardRoll
 
         private void dataGridView1_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
-            if (e.RowIndex == dataGridView1.Rows.Count - 1)
+            if (e.RowIndex == -1 || e.RowIndex == dataGridView1.Rows.Count - 1)
                 return;
 
             textBox1.Text = "";
