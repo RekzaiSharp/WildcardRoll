@@ -15,6 +15,12 @@ Just start the app, select the abilities you want to roll for and put the follow
 /click StaticPopup1Button1
 ```
 
+### Screenshot
+
+![screenshot][screenshot]
+
+[screenshot]: https://github.com/RekzaiSharp/WildcardRoll/blob/master/screenshot.jpg "WildcardRoll"
+
 ### License
 
 WildcardRoll is licensed under the [MIT License](https://github.com/RekzaiSharp/WildcardRoll/blob/master/LICENSE.md).
