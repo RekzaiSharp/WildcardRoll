@@ -11,7 +11,9 @@ namespace WildcardRoll
         [STAThread]
         static void Main()
         {
-            // new Updater();
+            if (new Updater().Run())
+                return;
+
             // API.UpdateSpellicons();
 
             Application.EnableVisualStyles();

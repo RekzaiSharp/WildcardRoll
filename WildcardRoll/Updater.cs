@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using NGit;
@@ -13,6 +14,13 @@ namespace WildcardRoll
 {
     class Updater
     {
+        [DllImport("kernel32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        static extern bool AllocConsole();
+
+        [DllImport("kernel32.dll", SetLastError = true, ExactSpelling = true)]
+        static extern bool FreeConsole();
+
         static string version = System.Reflection.Assembly.GetEntryAssembly().GetName().Version.ToString();
         static string repo_dir = Environment.CurrentDirectory + "\\repo";
         static string remote = "https://github.com/RekzaiSharp/WildcardRoll.git";
@@ -20,9 +28,21 @@ namespace WildcardRoll
 
         public Updater()
         {
+
+        }
+
+        public bool Run()
+        {
             Clone();
-            Update();
+            if (!Update())
+                return false;
+
+            AllocConsole();
             Build();
+            Console.ReadKey(true);
+            FreeConsole();
+
+            return true;
         }
 
         void Clone()
@@ -31,7 +51,7 @@ namespace WildcardRoll
             Git.CloneRepository().SetDirectory(repo_dir).SetURI(remote).Call();
         }
 
-        void Update()
+        bool Update()
         {
             var repo = Git.Open(repo_dir);
             var refUpdate = repo.Fetch().Call().GetTrackingRefUpdates();
@@ -39,9 +59,14 @@ namespace WildcardRoll
             {
                 repo.BranchCreate().SetForce(true).SetName("master").SetStartPoint("origin/master").Call();
                 repo.Checkout().SetName("master").Call();
+            } else
+            {
+                // already up2date
+                return false;
             }
             repo.GetRepository().Close();
             repo.GetRepository().ObjectDatabase.Close();
+            return true;
         }
 
         void Build()
@@ -63,10 +88,17 @@ namespace WildcardRoll
             var buildProc = new Process();
             buildProc.StartInfo.FileName = msbuild;
             buildProc.StartInfo.CreateNoWindow = true;
+            buildProc.StartInfo.UseShellExecute = false;
+            buildProc.StartInfo.RedirectStandardOutput = true;
+            buildProc.StartInfo.RedirectStandardError = true;
             buildProc.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
             buildProc.StartInfo.Arguments = "WildcardRoll.csproj /t:Build";
             buildProc.StartInfo.WorkingDirectory = repo_dir + @"\WildcardRoll";
             buildProc.Start();
+
+            while (!buildProc.StandardOutput.EndOfStream)
+                Console.WriteLine(buildProc.StandardOutput.ReadLine());
+
             buildProc.WaitForExit();
         }
 

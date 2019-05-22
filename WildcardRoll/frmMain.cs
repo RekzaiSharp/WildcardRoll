@@ -249,7 +249,7 @@ namespace WildcardRoll
 
                     var spells = from s in Database.Spells select s.Value.ID;
                     var diff = ids.Except(spells);
-                    var diffWithNames = from id in diff select $"{id} (guess: {API.GetSpellName(id)})";
+                    var diffWithNames = from id in diff select id + " (guess: " + API.GetSpellName(id) + ")";
                     if (diff.Count() != 0)
                     {
                         Stop();
@@ -263,7 +263,7 @@ namespace WildcardRoll
                         Stop();
                         BringToFront();
                         FlashWindow(Handle, true);
-                        MessageBox.Show("HIT " + string.Join(", ", from s in result.Spells select s.Name));
+                        MessageBox.Show("HIT " + string.Join(", ", from s in result.Spells select s.Name + " [" + s.ID + "]"));
                         return;
                     }
 
