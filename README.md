@@ -1,5 +1,5 @@
 # WildcardRoll
-A automatic roll bot for the wow private server project ascension. It works fully automaticly and with the ascension client in the background, so you can do other stuff on your computer while rolling.
+A automatic roll bot for the wow private server project ascension. It works fully *automaticly* and with the ascension client in the background, so you can do *other stuff on your computer while rolling*. Please note that using this software is **against the code of conduct** of project ascension and may lead into an **permantent ban**. Use it at your **own risk**!
 
 ### Downloading
 
