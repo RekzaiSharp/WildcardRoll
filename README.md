@@ -1,5 +1,5 @@
 # WildcardRoll
-A automatic roll bot for project ascension
+A automatic roll bot for the wow private server project ascension.
 
 ### Downloading
 
