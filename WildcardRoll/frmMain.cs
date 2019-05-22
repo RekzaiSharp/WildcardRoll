@@ -29,6 +29,8 @@ namespace WildcardRoll
         const int WM_SYSKEYDOWN = 0x104;
         const int WM_SYSKEYUP = 0x105;
 
+        static string VERSION = "v0.1.0";
+
         Memory Mem = new Memory();
         List<Set> Sets = new List<Set>();
         PictureBox[] pbs;
@@ -116,6 +118,8 @@ namespace WildcardRoll
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            Text += " " + VERSION;
+
             LoadSettings();
             setBindingSource.DataSource = Sets;
 

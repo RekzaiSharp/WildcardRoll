@@ -190,7 +190,7 @@
             this.tabPage2.Location = new System.Drawing.Point(4, 25);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(530, 817);
+            this.tabPage2.Size = new System.Drawing.Size(530, 818);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "tabPage2";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -343,7 +343,7 @@
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "frmMain";
-            this.Text = "Wildcard Roller";
+            this.Text = "WildcardRoll";
             this.Load += new System.EventHandler(this.Form1_Load);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
