@@ -82,7 +82,6 @@ namespace WildcardRoll
             { 2641, "Dismiss Pet" },
             { 6991, "Feed Pet" },
             { 982, "Revive Pet" },
-            { 1515, "Tame Beast" },
         } select e.Key).ToList();
 
         public static Dictionary<int, Spell> Spells = (from spell in new Dictionary<int, string>() {
@@ -102,8 +101,9 @@ namespace WildcardRoll
             { 774, "Rejuvenation" },
 
             // Beast Mastery
-            { 13163, "Aspect of the Monkey" },
             { 13165, "Aspect of the Hawk" },
+            { 13163, "Aspect of the Monkey" },
+            { 1515, "Tame Beast" },
             { 1978, "Serpent Sting" },
             // Marksmanship
             { 3044, "Arcane Shot" },
