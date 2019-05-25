@@ -239,6 +239,11 @@ namespace WildcardRoll
                 {
                     Mem.Open_pHandel(client.Handle);
 
+                    // only roll on level one characters
+                    var level = Mem.ReadByte(0x00C79E90);
+                    if (level != 1)
+                        continue;
+
                     var ids = new List<int>();
                     for (var i = 0; i <= 100; ++i)
                     {
