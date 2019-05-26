@@ -239,6 +239,11 @@ namespace WildcardRoll
                 {
                     Mem.Open_pHandel(client.Handle);
 
+                    // check if client is logged in
+                    var loggedIn = Mem.ReadByte(0x00ACDBE8) == 1;
+                    if (!loggedIn)
+                        continue;
+
                     // only roll on level one characters
                     var level = Mem.ReadByte(0x00C79E90);
                     if (level != 1)
