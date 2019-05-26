@@ -5,28 +5,12 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
 namespace WildcardRoll
 {
     public partial class frmMain : Form
     {
-        [DllImport("user32.dll", SetLastError = true)]
-        static extern bool PostMessage(IntPtr hWnd, uint Msg, int wParam, int lParam);
-
-        [DllImport("user32.dll", CharSet = CharSet.Auto)]
-        public static extern IntPtr SendMessage(IntPtr hWnd, int Msg, int wParam, IntPtr lParam);
-
-        [DllImport("user32.dll")]
-        static extern bool FlashWindow(IntPtr hwnd, bool bInvert);
-
-        const int WM_KEYDOWN = 0x100;
-        const int WM_KEYUP = 0x101;
-        const int WM_CHAR = 0x105;
-        const int WM_SYSKEYDOWN = 0x104;
-        const int WM_SYSKEYUP = 0x105;
-
         static string VERSION = "v1.0.3";
 
         Memory Mem = new Memory();
@@ -267,7 +251,6 @@ namespace WildcardRoll
                     if (diff.Count() != 0)
                     {
                         Stop();
-                        BringToFront();
                         MessageBox.Show("Unknwon Spell ID(s): " + string.Join(", ", diffWithNames) + "\n\nPlease contact a developer with this message.");
                         return;
                     }
@@ -275,14 +258,13 @@ namespace WildcardRoll
                     if (CheckForSetHit(ids, out Set result))
                     {
                         Stop();
-                        BringToFront();
-                        FlashWindow(Handle, true);
+                        Native.FlashWindow(Handle, true);
                         MessageBox.Show("HIT " + string.Join(", ", from s in result.Spells select $"{s.Name} [{s.ID}]"));
                         return;
                     }
 
-                    SendMessage(client.MainWindowHandle, WM_KEYDOWN, (int)Keys.D0, IntPtr.Zero);
-                    SendMessage(client.MainWindowHandle, WM_KEYUP, (int)Keys.D0, IntPtr.Zero);
+                    Native.SendMessage(client.MainWindowHandle, Native.WM_KEYDOWN, (int)Keys.D0, IntPtr.Zero);
+                    Native.SendMessage(client.MainWindowHandle, Native.WM_KEYUP, (int)Keys.D0, IntPtr.Zero);
                 }
             }
             catch (Exception ex)
