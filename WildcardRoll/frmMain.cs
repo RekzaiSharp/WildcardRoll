@@ -12,7 +12,7 @@ namespace WildcardRoll
 {
     public partial class frmMain : Form
     {
-        static string VERSION = "v1.1.0";
+        static string VERSION = "v1.1.0a";
 
         Memory Mem = new Memory();
         PictureBox[] pbs;
