@@ -12,19 +12,15 @@ namespace WildcardRoll
 {
     public partial class frmMain : Form
     {
-        static string VERSION = "v1.0.3";
+        static string VERSION = "v1.1.0";
 
         Memory Mem = new Memory();
-        //List<Set> Sets = new List<Set>();
         PictureBox[] pbs;
         ToolTip[] tts;
         Set selectedSet;
         List<ToolTip> renderTTs = new List<ToolTip>();
 
-        static string settings_file = "collections.json";
-
         BindingList<Collection> Collections = new BindingList<Collection>();
-
         Collection CurrentCollection { get { return (Collection)collectionComboBox.SelectedItem; } }
 
         public frmMain()
@@ -32,15 +28,15 @@ namespace WildcardRoll
             InitializeComponent();
         }
 
-        void LoadSettings()
+        void LoadCollections()
         {
-            if (File.Exists(settings_file))
-                Collections = JsonConvert.DeserializeObject<BindingList<Collection>>(File.ReadAllText(settings_file));
+            if (File.Exists("collections.json"))
+                Collections = JsonConvert.DeserializeObject<BindingList<Collection>>(File.ReadAllText("collections.json"));
         }
 
-        void SaveSettings()
+        void SaveCollections()
         {
-            File.WriteAllText(settings_file, JsonConvert.SerializeObject(Collections, Formatting.Indented));
+            File.WriteAllText("collections.json", JsonConvert.SerializeObject(Collections, Formatting.Indented));
         }
 
         void Render(string search = null)
@@ -107,7 +103,7 @@ namespace WildcardRoll
         {
             Text += " " + VERSION;
 
-            LoadSettings();
+            SaveCollections();
             collectionBindingSource.DataSource = Collections;
             collectionComboBox.DisplayMember = "ShowAs";
             collectionComboBox.ValueMember = "ShowAs";
@@ -146,7 +142,7 @@ namespace WildcardRoll
         {
             selectedSet = null;
             tabControl1.SelectedIndex = 0;
-            SaveSettings();
+            SaveCollections();
         }
 
         private void btnRoll_Click(object sender, EventArgs e)
@@ -287,12 +283,12 @@ namespace WildcardRoll
 
         private void dataGridView1_UserDeletedRow(object sender, DataGridViewRowEventArgs e)
         {
-            SaveSettings();
+            SaveCollections();
         }
 
         private void dataGridView1_CellEndEdit(object sender, DataGridViewCellEventArgs e)
         {
-            SaveSettings();
+            SaveCollections();
         }
 
         private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -310,7 +306,7 @@ namespace WildcardRoll
             var collection = new Collection() { Name = form.Result };
             Collections.Add(collection);
             collectionComboBox.SelectedItem = collection;
-            SaveSettings();
+            SaveCollections();
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -326,7 +322,7 @@ namespace WildcardRoll
                 return;
 
             Collections.Remove(CurrentCollection);
-            SaveSettings();
+            SaveCollections();
         }
 
         private void collectionComboBox_SelectedValueChanged(object sender, EventArgs e)
@@ -375,7 +371,7 @@ namespace WildcardRoll
 
             var set = (Set)row.DataBoundItem;
             CurrentCollection.Sets.Insert(row.Index, set.Clone());
-            SaveSettings();
+            SaveCollections();
         }
 
         private void frmMain_FormClosing(object sender, FormClosingEventArgs e)
