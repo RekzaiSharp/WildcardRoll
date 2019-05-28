@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 
 namespace WildcardRoll
 {
-    class Win32
+    class Native
     {
         [DllImport("user32.dll", SetLastError = true)]
         public static extern bool PostMessage(IntPtr hWnd, uint Msg, int wParam, int lParam);

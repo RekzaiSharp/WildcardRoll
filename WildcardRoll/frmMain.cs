@@ -6,6 +6,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
+using System.ComponentModel;
 
 namespace WildcardRoll
 {
@@ -14,13 +15,17 @@ namespace WildcardRoll
         static string VERSION = "v1.0.3";
 
         Memory Mem = new Memory();
-        List<Set> Sets = new List<Set>();
+        //List<Set> Sets = new List<Set>();
         PictureBox[] pbs;
         ToolTip[] tts;
         Set selectedSet;
         List<ToolTip> renderTTs = new List<ToolTip>();
 
-        static string settings_file = "settings.json";
+        static string settings_file = "collections.json";
+
+        BindingList<Collection> Collections = new BindingList<Collection>();
+
+        Collection CurrentCollection { get { return (Collection)collectionComboBox.SelectedItem; } }
 
         public frmMain()
         {
@@ -30,12 +35,12 @@ namespace WildcardRoll
         void LoadSettings()
         {
             if (File.Exists(settings_file))
-                Sets = JsonConvert.DeserializeObject<List<Set>>(File.ReadAllText(settings_file));
+                Collections = JsonConvert.DeserializeObject<BindingList<Collection>>(File.ReadAllText(settings_file));
         }
 
         void SaveSettings()
         {
-            File.WriteAllText(settings_file, JsonConvert.SerializeObject(Sets, Formatting.Indented));
+            File.WriteAllText(settings_file, JsonConvert.SerializeObject(Collections, Formatting.Indented));
         }
 
         void Render(string search = null)
@@ -103,7 +108,9 @@ namespace WildcardRoll
             Text += " " + VERSION;
 
             LoadSettings();
-            setBindingSource.DataSource = Sets;
+            collectionBindingSource.DataSource = Collections;
+            collectionComboBox.DisplayMember = "ShowAs";
+            collectionComboBox.ValueMember = "ShowAs";
 
             pbs = new PictureBox[] { pictureBox1, pictureBox2, pictureBox3, pictureBox4, pictureBox5 };
             tts = new ToolTip[] { new ToolTip(), new ToolTip(), new ToolTip(), new ToolTip(), new ToolTip() };
@@ -167,7 +174,8 @@ namespace WildcardRoll
             if (e.ColumnIndex > 0)
             {
                 var elem = dataGridView1[e.ColumnIndex, e.RowIndex];
-                var set = (Set)dataGridView1.Rows[e.RowIndex].DataBoundItem;
+                var row = dataGridView1.Rows[e.RowIndex];
+                var set = (Set)row.DataBoundItem;
                 if (set == null)
                 {
                     e.Value = Properties.Resources.inv_misc_questionmark;
@@ -194,23 +202,26 @@ namespace WildcardRoll
             Render(textBox1.Text);
         }
 
-        bool CheckForSetHit(List<int> ids, out Set result)
+        bool CheckForSetHit(List<int> ids, out Collection collectionRet, out Set setRet)
         {
-            foreach (var set in Sets)
-            {
-                if (!set.Enabled || set.Spells.Count == 0)
-                    continue;
-
-                var search = (from s in set.Spells select s.ID).ToArray();
-                var inter = search.Intersect(ids);
-                if (inter.Count() == search.Count())
+            foreach (var collection in Collections)
+                foreach (var set in collection.Sets)
                 {
-                    result = set;
-                    return true;
-                }
-            }
+                    if (!set.Enabled || set.Spells.Count == 0)
+                        continue;
 
-            result = null;
+                    var search = (from s in set.Spells select s.ID).ToArray();
+                    var inter = search.Intersect(ids);
+                    if (inter.Count() == search.Count())
+                    {
+                        collectionRet = collection;
+                        setRet = set;
+                        return true;
+                    }
+                }
+
+            collectionRet = null;
+            setRet = null;
             return false;
         }
 
@@ -255,11 +266,11 @@ namespace WildcardRoll
                         return;
                     }
 
-                    if (CheckForSetHit(ids, out Set result))
+                    if (CheckForSetHit(ids, out Collection collection, out Set result))
                     {
                         Stop();
                         Native.FlashWindow(Handle, true);
-                        MessageBox.Show("HIT " + string.Join(", ", from s in result.Spells select $"{s.Name} [{s.ID}]"));
+                        MessageBox.Show($"HIT {collection.Name}: {string.Join(", ", from s in result.Spells select $"{s.Name} [{s.ID}]")}");
                         return;
                     }
 
@@ -287,6 +298,91 @@ namespace WildcardRoll
         private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             Process.Start("https://github.com/RekzaiSharp/WildcardRoll");
+        }
+
+        private void btnAddCollection_Click(object sender, EventArgs e)
+        {
+            var form = new frmAddCollection();
+            var result = form.ShowDialog();
+            if (result != DialogResult.OK)
+                return;
+
+            var collection = new Collection() { Name = form.Result };
+            Collections.Add(collection);
+            collectionComboBox.SelectedItem = collection;
+            SaveSettings();
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            if (CurrentCollection == null)
+                return;
+
+            if (MessageBox.Show($"Are you sure you want to delete the collection \"{CurrentCollection.Name}\"?",
+                "Delete Collection",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question,
+                MessageBoxDefaultButton.Button2) != DialogResult.Yes)
+                return;
+
+            Collections.Remove(CurrentCollection);
+            SaveSettings();
+        }
+
+        private void collectionComboBox_SelectedValueChanged(object sender, EventArgs e)
+        {
+            if (CurrentCollection == null)
+            {
+                dataGridView1.Enabled = false;
+                setBindingSource.DataSource = null;
+                return;
+            }
+
+            dataGridView1.Enabled = true;
+            setBindingSource.DataSource = CurrentCollection.Sets;
+        }
+
+        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+            // Update data changes instantly to update the numbers in the collectionComboBox
+            dataGridView1.EndEdit();
+        }
+
+        private void dataGridView1_EnabledChanged(object sender, EventArgs e)
+        {
+            var dgv = dataGridView1;
+            dgv.DefaultCellStyle.BackColor = dgv.Enabled ? SystemColors.Window : SystemColors.Control;
+            dgv.DefaultCellStyle.ForeColor = dgv.Enabled ? SystemColors.ControlText : SystemColors.GrayText;
+            dgv.ColumnHeadersDefaultCellStyle.BackColor = dgv.Enabled ? SystemColors.Window : SystemColors.Control;
+            dgv.ColumnHeadersDefaultCellStyle.ForeColor = dgv.Enabled ? SystemColors.ControlText : SystemColors.GrayText;
+            dgv.ReadOnly = !dgv.Enabled;
+            dgv.EnableHeadersVisualStyles = dgv.Enabled;
+            if (!dgv.Enabled)
+                dgv.CurrentCell = null;
+        }
+
+        private void dataGridView1_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode != Keys.D)
+                return;
+
+            if (dataGridView1.SelectedRows.Count != 1)
+                return;
+
+            var row = dataGridView1.SelectedRows[0];
+            if (row.Index >= dataGridView1.RowCount - 1)
+                return;
+
+            var set = (Set)row.DataBoundItem;
+            CurrentCollection.Sets.Insert(row.Index, set.Clone());
+            SaveSettings();
+        }
+
+        private void frmMain_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            // fix errors while disposing dataGridView1 and collectionComboBox, see:
+            // https://social.msdn.microsoft.com/Forums/windows/en-US/d2e9cc04-4104-4154-b82f-74613a75f44a/problem-when-closing-form-containing-datagridview-index-0-does-not-have-a-value?forum=winforms
+            dataGridView1.DataSource = null;
         }
     }
 }

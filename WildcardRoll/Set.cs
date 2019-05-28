@@ -1,11 +1,27 @@
 ﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
 
 namespace WildcardRoll
 {
-    public class Set
+    public class Set : INotifyPropertyChanged
     {
-        public bool Enabled { get; set; }
+        bool enabled;
+
+        public bool Enabled
+        {
+            get
+            {
+                return enabled;
+            }
+            set
+            {
+                enabled = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Enabled"));
+            }
+        }
 
         [JsonIgnore]
         public Spell Spell1 { get { return Spells.Count >= 1 ? Spells[0] : null; } }
@@ -20,6 +36,8 @@ namespace WildcardRoll
 
         public List<Spell> Spells = new List<Spell>();
 
+        public event PropertyChangedEventHandler PropertyChanged;
+
         public Set() { }
 
         public void AddSpell(Spell spell)
@@ -32,6 +50,15 @@ namespace WildcardRoll
         {
             if (i < Spells.Count)
                 Spells.RemoveAt(i);
+        }
+
+        public Set Clone()
+        {
+            return new Set()
+            {
+                enabled = enabled,
+                Spells = (from spell in Spells select spell).ToList()
+            };
         }
     }
 }
