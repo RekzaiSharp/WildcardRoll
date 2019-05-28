@@ -103,7 +103,7 @@ namespace WildcardRoll
         {
             Text += " " + VERSION;
 
-            SaveCollections();
+            LoadCollections();
             collectionBindingSource.DataSource = Collections;
             collectionComboBox.DisplayMember = "ShowAs";
             collectionComboBox.ValueMember = "ShowAs";
